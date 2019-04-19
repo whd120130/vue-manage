@@ -17,7 +17,7 @@ Vue.use(ElementUI, {
 });
 Vue.prototype.$axios = axios;
 axios.defaults.baseURL="http://localhost:8080";
-axios.defaults.headers['token'] = localStorage.getItem("token");
+// axios.defaults.headers.common['token'] = localStorage.getItem("token");
 
 import moment from 'moment';
 
@@ -51,6 +51,8 @@ router.beforeEach((to, from, next) => {
 axios.interceptors.request.use(config=>{
     if (localStorage.token){
         config.headers.Authorization = localStorage.token;
+        config.headers.token = localStorage.token;
+
     }
     return config;
 },error => {

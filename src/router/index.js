@@ -20,7 +20,7 @@ export default new Router({
                     meta: { title: '系统首页' }
                 },
                 {
-                    path:'/merchant',
+                    path:'/modules/app/merchant.html',
                     component: resolve => require(['../components/payment/merchant.vue'], resolve),
                     meta:{ title:'商户信息'}
                 },

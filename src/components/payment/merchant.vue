@@ -302,7 +302,7 @@
                     headers: {
                         // 'content-type': 'application/json',
                         'Content-Type': 'application/x-www-form-urlencoded',
-                        "token": localStorage.getItem("token") //token换成从缓存获取
+                        'token': localStorage.getItem("token") //token换成从缓存获取
                     },
                     params:{
                         merchantId:this.form.merchantId,
