@@ -3,13 +3,15 @@ import App from './App.vue'
 import router from './router'
 import axios from 'axios';
 import ElementUI from 'element-ui';
-import { Message } from 'element-ui'
+import { Message } from 'element-ui';
+import store from './store/store'
 // import Loading from 'element-ui';
 import 'element-ui/lib/theme-chalk/index.css'; // 默认主题
 // import '../static/css/theme-green/index.css';       // 浅绿色主题
 import './assets/css/icon.css';
 import './components/common/directives';
 import "babel-polyfill";
+import moment from 'moment';
 
 Vue.config.productionTip = false
 Vue.use(ElementUI, {
@@ -17,9 +19,7 @@ Vue.use(ElementUI, {
 });
 Vue.prototype.$axios = axios;
 axios.defaults.baseURL="http://localhost:8080";
-// axios.defaults.headers.common['token'] = localStorage.getItem("token");
 
-import moment from 'moment';
 
 Vue.filter('moment', function (value, formatString) {
     formatString = formatString || 'YYYY-MM-DD HH:mm:ss';
@@ -30,6 +30,18 @@ Vue.filter('moment', function (value, formatString) {
 //使用钩子函数对路由进行权限跳转
 router.beforeEach((to, from, next) => {
     const role = localStorage.getItem('ms_username');
+    axios.post("/sys/menu/nav",null, {
+    }).then((res) => {
+        if (res.data != null){
+            store.commit('init',res.data.permissions);
+            // alert(11);
+            alert(store.state.permissions);
+        }else {
+
+        }
+    });
+
+
     if (!role && to.path !== '/login') {
         next('/login');
     } else if (to.meta.permission) {
@@ -52,7 +64,6 @@ axios.interceptors.request.use(config=>{
     if (localStorage.token){
         config.headers.Authorization = localStorage.token;
         config.headers.token = localStorage.token;
-
     }
     return config;
 },error => {
@@ -76,5 +87,6 @@ axios.interceptors.response.use(response=>{
 
 new Vue({
     router,
+    store,
     render: h => h(App)
 }).$mount('#app')

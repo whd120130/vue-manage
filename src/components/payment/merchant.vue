@@ -24,7 +24,7 @@
 
                     <el-button type="primary" icon="el-icon-search" @click="reload">搜索</el-button>
                     <el-button icon="el-icon-delete" class="handle-del mr5" @click="clear">清空</el-button>
-                    <el-button icon="el-icon-download" class="handle-del mr5" @click="">导出excel</el-button>
+                    <el-button icon="el-icon-download" class="handle-del mr5" @click="test">导出excel</el-button>
                 </div>
             </el-form>
             <div class="handle-box">
@@ -32,7 +32,7 @@
             </div>
 
             <div class="handle-box">
-                <el-button type="primary" icon="el-icon-circle-plus" @click="addVisible=true">新增</el-button>
+                <el-button v-if="permissionsAdd" type="primary" icon="el-icon-circle-plus" @click="addVisible=true">新增</el-button>
             </div>
 
 
@@ -109,7 +109,7 @@
                 </el-form-item>
                 <el-form-item>
                     <el-button type="primary" @click="onSubmit">提交</el-button>
-                    <el-button @click="editVisible=false">取消</el-button>
+                    <el-button @click="editVisible=false,addForm=''">取消</el-button>
                 </el-form-item>
             </el-form>
         </el-dialog>
@@ -138,14 +138,16 @@
                 </el-form-item>
                 <el-form-item>
                     <el-button type="primary" @click="onSubmit('addForm')">提交</el-button>
-                    <el-button @click="addVisible=false">取消</el-button>
+                    <el-button @click="addVisible=false,addForm=''">取消</el-button>
                 </el-form-item>
             </el-form>
         </el-dialog>
     </div>
 </template>
 <script>
-    import {Message} from 'element-ui'
+    import {Message} from 'element-ui';
+    import store from '../../store/store.js';
+    import {hasPermission} from '../common/util';
     export default {
         name: 'basetable',
         data() {
@@ -225,12 +227,13 @@
                 }
             }
         },
+        store: store,
         created() {
             this.reload();
         },
         computed: {
-            data() {
-                this.reload();
+            permissionsAdd(){
+                return hasPermission(this.$store.state.permissions,'merchant:save')
             }
         },
         methods: {
@@ -266,6 +269,15 @@
                 };
                 this.pagination.page_index =1;
                 this.pagination.page_size = 10
+            },
+            test(){
+                alert(hasPermission(this.$store.state.permissions,"123"));
+                alert(this.$store.state.count);
+                alert(this.$store.state.permissions[0]);
+                alert(this.$store.state.permissions[1]);
+                alert(this.$store.state.permissions[2]);
+                alert(this.$store.state.permissions[3]);
+                alert(this.$store.state.permissions[4]);
             },
             formatter(row, column) {
                 return row.address;
